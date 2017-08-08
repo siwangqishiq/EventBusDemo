@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 public class SubscriberMethod {
     final Method method;
     final ThreadMode threadMode;
-    final Class<?> eventType;
+    final Class<?> eventType;//参数类型
     final int priority;
     final boolean sticky;
     /** Used for efficient comparison */

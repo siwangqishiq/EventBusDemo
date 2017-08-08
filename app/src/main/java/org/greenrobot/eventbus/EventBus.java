@@ -20,6 +20,7 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class EventBus {
     private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {
         Class<?> eventType = subscriberMethod.eventType;
         Subscription newSubscription = new Subscription(subscriber, subscriberMethod);
-        CopyOnWriteArrayList<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
+        CopyOnWriteArrayList<Subscription> subscriptions = subscriptionsByEventType .get(eventType);
         if (subscriptions == null) {
             subscriptions = new CopyOnWriteArrayList<>();
             subscriptionsByEventType.put(eventType, subscriptions);
@@ -237,10 +238,10 @@ public class EventBus {
     /** Posts the given event to the event bus. */
     public void post(Object event) {
         PostingThreadState postingState = currentPostingThreadState.get();
-        List<Object> eventQueue = postingState.eventQueue;
-        eventQueue.add(event);
+        List<Object> eventQueue = postingState.eventQueue;//当前线程下的事件队列
+        eventQueue.add(event);//加入队列末尾
 
-        if (!postingState.isPosting) {
+        if (!postingState.isPosting) {//线程为非POST方式
             postingState.isMainThread = Looper.getMainLooper() == Looper.myLooper();
             postingState.isPosting = true;
             if (postingState.canceled) {
@@ -319,7 +320,7 @@ public class EventBus {
      *
      * @return true if the events matched and the sticky event was removed.
      */
-    public boolean removeStickyEvent(Object event) {
+    public boolean removeAllStickyEvents(Object event) {
         synchronized (stickyEvents) {
             Class<?> eventType = event.getClass();
             Object existingEvent = stickyEvents.get(eventType);

@@ -88,7 +88,8 @@ class SubscriberMethodFinder {
                 findUsingReflectionInSingleClass(findState);
             }
             findState.moveToSuperclass();
-        }
+        }//end while
+
         return getMethodsAndRelease(findState);
     }
 
@@ -141,8 +142,8 @@ class SubscriberMethodFinder {
         FindState findState = prepareFindState();
         findState.initForSubscriber(subscriberClass);
         while (findState.clazz != null) {
-            findUsingReflectionInSingleClass(findState);
             findState.moveToSuperclass();
+            findUsingReflectionInSingleClass(findState);
         }
         return getMethodsAndRelease(findState);
     }
@@ -161,7 +162,7 @@ class SubscriberMethodFinder {
             int modifiers = method.getModifiers();
             if ((modifiers & Modifier.PUBLIC) != 0 && (modifiers & MODIFIERS_IGNORE) == 0) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if (parameterTypes.length == 1) {
+                if (parameterTypes.length == 1) {//找出 含有Subscribe.class注解  且 仅有一个参数的方法
                     Subscribe subscribeAnnotation = method.getAnnotation(Subscribe.class);
                     if (subscribeAnnotation != null) {
                         Class<?> eventType = parameterTypes[0];
@@ -181,7 +182,7 @@ class SubscriberMethodFinder {
                 throw new EventBusException(methodName +
                         " is a illegal @Subscribe method: must be public, non-static, and non-abstract");
             }
-        }
+        }//end for each 遍历此类下的所有方法
     }
 
     static void clearCaches() {
@@ -265,6 +266,6 @@ class SubscriberMethodFinder {
                 }
             }
         }
-    }
+    }//end inner class
 
 }
